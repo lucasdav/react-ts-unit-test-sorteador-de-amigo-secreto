@@ -53,3 +53,37 @@ test('adicionar um participante caso exista um nome preenchido', () => {
     expect(input).toHaveValue("")
 
 })
+
+test('nomes duplicados não podem ser adicionados na lista', () => {
+    render(
+        <RecoilRoot>
+            <Formulario />
+        </RecoilRoot>
+    )
+
+    // encontrar no DOM o input
+    const input = screen.getByPlaceholderText('Insira os nomes dos participantes')
+
+    // encontrar o botão
+    const botao = screen.getByRole('button')
+
+    // inserir um valor no input
+    fireEvent.change(input, {
+        target: {
+            value: 'Ana Catarina'
+        }
+    })
+    fireEvent.click(botao)
+    // inserir o mesmo valor no input
+    fireEvent.change(input, {
+        target: {
+            value: 'Ana Catarina'
+        }
+    })
+
+    fireEvent.click(botao)
+
+    const mensagemDeErro = screen.getByRole('alert')
+
+    expect(mensagemDeErro.textContent).toBe('Nomes duplicados não são permitidos!')
+})
